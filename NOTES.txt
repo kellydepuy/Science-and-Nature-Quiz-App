@@ -1,4 +1,9 @@
-work on the answer component
+make the answers unordered and random
+data clean up for quotations
+
+
+
+*******************************
 
 
 results: Array(10)
@@ -82,3 +87,61 @@ length: 10
 
 
 //console.log(listOfQuestions)
+
+
+
+
+
+
+import Background from "./components/Background";
+import StartMain from "./components/StartMain"
+import {useEffect, useState} from "react"
+import Question from './components/Question'
+
+export default function App() {
+
+  const [quizData, setQuizData] = useState({})
+
+    useEffect(() => {
+      fetch('https://opentdb.com/api.php?amount=10')
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          setQuizData(data);
+        });
+    }, []);
+    let mappedQuestion = []
+
+   
+
+    function mappingQuestions() {
+      mappedQuestion = quizData.results.map(item =>
+      <Question
+      id={1}
+      question={item.question}
+      key={item.question}
+      correct={item.correct_answer}
+      wrong={item.incorrect_answers}
+      onClick={handleAnswerClick}
+      isClicked={false}
+      />)
+    }
+
+    quizData.results && console.log(mappedQuestion)
+    quizData.results && mappingQuestions()
+
+    function handleAnswerClick(id) {
+      
+        // mappedQuestion.map(item => [...mappedQuestion, (mappedQuestion.item.id === id ? !mappedQuestion.item : mappedQuestion.item)])
+
+    }
+    return (
+        <div className="App">
+          <Background />
+          <StartMain />
+          {mappedQuestion}
+     </div>
+    );
+  }
+

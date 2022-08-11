@@ -1,15 +1,52 @@
-import Background from "./components/Background";
 import StartMain from "./components/StartMain"
 import {useEffect, useState} from "react"
 import Question from './components/Question'
+import CheckAnswers from "./components/CheckAnswers";
+import Counter from "./components/Counter";
+import StartOverButton from "./components/StartOverButton";
 
-function App() {
+export default function App() {
+
+  //States
 
   const [quizData, setQuizData] = useState({})
-  const [mappedQuestion, setMappedQuestion] = useState()
+  const [checkAnswers, setCheckAnswers] = useState(false)
+  const [radioAnswers, setRadioAnswers] = useState({})
+  const [counter, setCounter] = useState(0)
+  const[page1, setPage1] = useState(true)
+ 
+
+  //Handler Functions -- handleRadio saves which answer was selected for each question
+  //                  -- handleCheckAnswers tells the app that it is time to reveal the answers
+
+  function handleRadio(questionID, event, correct) {
+      setRadioAnswers(prev => {return {...prev, [questionID]: event}})
+      if (event === correct){setCounter(prev => prev + 1)}
+  }
+
+  function handleCheckAnswers() {
+    setCheckAnswers(!checkAnswers)
+  }
+
+  function handleStartOver() {
+    window.onbeforeunload = function () {
+      window.scrollTo(0, 0);
+    }
+    window.location.reload(false)
+    setCheckAnswers(false)
+    setRadioAnswers({})
+    setCounter(0)
+    setPage1(true)
+  }
+  
+  function handleStartQuiz() {
+    setPage1(false)
+  }
+
+  //Data Fetching
 
     useEffect(() => {
-      fetch('https://opentdb.com/api.php?amount=10')
+      fetch('https://opentdb.com/api.php?amount=5&category=17&type=multiple')
         .then((response) => {
           return response.json();
         })
@@ -18,43 +55,37 @@ function App() {
         });
     }, []);
 
-    let tempQuestionsList = []
-    function mappingQuestions() {
-      tempQuestionsList =
-      quizData.results.map(item =>
-      <Question
-      id={Math.floor(Math.random) * 100}
-      question={item.question}
-      key={item.question}
-      correct={item.correct_answer}
-      wrong={item.incorrect_answers}
-      onClick={handleAnswerClick}
-      isClicked={false}
-      />)
-      return tempQuestionsList
-    }
+  
+  //Mapping instances of the Questions component
 
-    quizData.results && console.log(tempQuestionsList)
+    let mappedQuestion = []
+    function mappingQuestions() {
+      mappedQuestion = quizData.results.map(item => {
+        return (
+      <Question
+        key={item.question}
+        questionID = {quizData.results.indexOf(item)}
+        question={item.question}
+        correct={item.correct_answer}
+        wrong={item.incorrect_answers}
+        className="questions"
+        checkAnswers={checkAnswers}
+        onChange={handleRadio}
+        page1={page1}
+      />)})}
+
+    console.log(quizData)
     quizData.results && mappingQuestions()
 
-    function handleAnswerClick(id) {
-      setMappedQuestion(prevQuestions =>{
-        const newMappedQuestion = []
-        for (let i = 0; i < mappedQuestion.length; i++) {
-          if (mappedQuestion[i].id === id) {
-            newMappedQuestion.push(mappedQuestion[i] = {...prevQuestions, isClicked:!mappedQuestion[i].isClicked})
-          } else {newMappedQuestion.push(mappedQuestion[i])}
-        }
-        return newMappedQuestion
-      }
-      )
-    }
     return (
         <div className="App">
-          <Background />
-          <StartMain />
+          <StartMain onClick={handleStartQuiz} page1={page1}/>
           {mappedQuestion}
-     </div>
-    );
+          <CheckAnswers checkAnswers={checkAnswers} onClick={handleCheckAnswers} page1={page1}/>
+          <div className={checkAnswers ? "counter-div" : "hidden"}>
+            <Counter numberCorrect={counter} checkAnswers={checkAnswers}/>
+            <StartOverButton onClick={handleStartOver}/>
+          </div>
+        </div>
+    )
   }
-export default App;
