@@ -16,8 +16,11 @@ export default function App() {
   const[page1, setPage1] = useState(true)
  
 
-  //Handler Functions -- handleRadio saves which answer was selected for each question
-  //                  -- handleCheckAnswers tells the app that it is time to reveal the answers
+  //Handler Functions -- handleRadio saves which answer was selected for each question (for debugging)
+  //                       This can be removed once the app is finalized. The functions's primary purpose is to update the counter.
+  //                  -- handleCheckAnswers tells the app to reveal the answers by toggling the button's state
+  //                  --handleStartOver resets the app by refreshing the window and resetting the states
+  //                  --handleStartQuiz reveals the quiz questions and answers when the "start quiz" button is clicked
 
   function handleRadio(questionID, event, correct) {
       setRadioAnswers(prev => {return {...prev, [questionID]: event}})
@@ -30,8 +33,7 @@ export default function App() {
 
   function handleStartOver() {
     window.onbeforeunload = function () {
-      window.scrollTo(0, 0);
-    }
+      window.scrollTo(0, 0);}
     window.location.reload(false)
     setCheckAnswers(false)
     setRadioAnswers({})

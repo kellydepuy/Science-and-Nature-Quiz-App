@@ -5,8 +5,12 @@ export default function Question(props) {
     const [answer1, setAnswer1] = useState("")
     const [answer2, setAnswer2] = useState("")
     const [answer3, setAnswer3] = useState("")
+    const [number, setNumber] = useState(Math.floor(Math.random() * 3))
 
-
+    // The correct answer is inserted at a random positon by using logical AND with a random number assigned above.
+    //Data included html entities and dangerouslysetinnerhtml was used since this app is not intended for public use,
+    //and contains no sensitive data.
+    
     return (
         <div className={!props.page1 ? "questions" : "hidden"}>
             <div className="question-div">
@@ -14,6 +18,31 @@ export default function Question(props) {
             </div>
 
         <div className="radio-answers-div">
+        <div>
+                {number === 0 && <input
+                    className= "radio-input"
+                    type="radio"
+                    name={props.question}
+                    id={props.correct}
+                    value={props.correct}
+                    onChange={(e) => {props.onChange(props.questionID, e.target.value, props.correct)
+                                        setAnswer3("3")
+                                        setAnswer1("")
+                                        setAnswer2("")
+                                        setAnswer0("")}}
+                    checked={answer3 === props.correct}
+                    disabled={props.checkAnswers ? true : false}
+                />}
+                {number === 0 && <label
+                    dangerouslySetInnerHTML={{__html: props.correct}}
+                    className= {props.checkAnswers && answer3 ? "radio-label radio-label-green radio-label-clicked"
+                        : props.checkAnswers && !answer3 ? "radio-label radio-label-green-light"
+                        : !props.checkAnswers && answer3 ? "radio-label-clicked radio-label"
+                        : "radio-label"}
+                    id="radio-correct"
+                    htmlFor={props.correct}
+                    ></label>}
+            </div>
             <div>
                 <input
                     className="radio-input"
@@ -38,7 +67,31 @@ export default function Question(props) {
                     htmlFor={props.wrong[0]}
                     ></label>
             </div>
-
+            <div>
+                {number === 1 && <input
+                    className= "radio-input"
+                    type="radio"
+                    name={props.question}
+                    id={props.correct}
+                    value={props.correct}
+                    onChange={(e) => {props.onChange(props.questionID, e.target.value, props.correct)
+                                        setAnswer3("3")
+                                        setAnswer1("")
+                                        setAnswer2("")
+                                        setAnswer0("")}}
+                    checked={answer3 === props.correct}
+                    disabled={props.checkAnswers ? true : false}
+                />}
+                {number === 1 && <label
+                    dangerouslySetInnerHTML={{__html: props.correct}}
+                    className= {props.checkAnswers && answer3 ? "radio-label radio-label-green radio-label-clicked"
+                        : props.checkAnswers && !answer3 ? "radio-label radio-label-green-light"
+                        : !props.checkAnswers && answer3 ? "radio-label-clicked radio-label"
+                        : "radio-label"}
+                    id="radio-correct"
+                    htmlFor={props.correct}
+                    ></label>}
+            </div>
             <div>
                 {props.wrong[1] && <input
                     className="radio-input"
@@ -64,7 +117,31 @@ export default function Question(props) {
                         htmlFor={props.wrong[1]}
                         ></label>}
             </div>
-
+            <div>
+                {number === 2 && <input
+                    className= "radio-input"
+                    type="radio"
+                    name={props.question}
+                    id={props.correct}
+                    value={props.correct}
+                    onChange={(e) => {props.onChange(props.questionID, e.target.value, props.correct)
+                                        setAnswer3("3")
+                                        setAnswer1("")
+                                        setAnswer2("")
+                                        setAnswer0("")}}
+                    checked={answer3 === props.correct}
+                    disabled={props.checkAnswers ? true : false}
+                />}
+                {number === 2 && <label
+                    dangerouslySetInnerHTML={{__html: props.correct}}
+                    className= {props.checkAnswers && answer3 ? "radio-label radio-label-green radio-label-clicked"
+                        : props.checkAnswers && !answer3 ? "radio-label radio-label-green-light"
+                        : !props.checkAnswers && answer3 ? "radio-label-clicked radio-label"
+                        : "radio-label"}
+                    id="radio-correct"
+                    htmlFor={props.correct}
+                    ></label>}
+            </div>
             <div>
                 {props.wrong[2] && <input
                     className="radio-input"                     
@@ -92,7 +169,7 @@ export default function Question(props) {
             </div>
 
             <div>
-                <input
+                {number === 3 && <input
                     className= "radio-input"
                     type="radio"
                     name={props.question}
@@ -105,15 +182,16 @@ export default function Question(props) {
                                         setAnswer0("")}}
                     checked={answer3 === props.correct}
                     disabled={props.checkAnswers ? true : false}
-                />
-                <label
+                />}
+                {number === 3 && <label
                     dangerouslySetInnerHTML={{__html: props.correct}}
                     className= {props.checkAnswers && answer3 ? "radio-label radio-label-green radio-label-clicked"
                         : props.checkAnswers && !answer3 ? "radio-label radio-label-green-light"
                         : !props.checkAnswers && answer3 ? "radio-label-clicked radio-label"
-                        : "radio-label"} 
+                        : "radio-label"}
+                    id="radio-correct"
                     htmlFor={props.correct}
-                    ></label>
+                    ></label>}
             </div>
 
         </div>
